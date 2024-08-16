@@ -100,7 +100,7 @@ func validateChannel(d *schema.ResourceData) (bool, error) {
 				return false, errors.New("nsfw is not allowed on categories")
 			}
 		}
-	case "voice":
+	case "voice", "stage":
 		{
 			if _, ok := d.GetOk("topic"); ok {
 				return false, errors.New("topic is not allowed on voice channels")
@@ -109,7 +109,7 @@ func validateChannel(d *schema.ResourceData) (bool, error) {
 				return false, errors.New("nsfw is not allowed on voice channels")
 			}
 		}
-	case "text", "news":
+	case "text", "news", "forum":
 		{
 			if _, ok := d.GetOk("bitrate"); ok {
 				return false, errors.New("bitrate is not allowed on text channels")
@@ -153,7 +153,7 @@ func resourceChannelCreate(ctx context.Context, d *schema.ResourceData, m interf
 	)
 
 	switch channelType {
-	case "text", "news":
+	case "text", "news", "forum":
 		{
 			if v, ok := d.GetOk("topic"); ok {
 				topic = v.(string)
@@ -162,7 +162,7 @@ func resourceChannelCreate(ctx context.Context, d *schema.ResourceData, m interf
 				nsfw = v.(bool)
 			}
 		}
-	case "voice":
+	case "voice", "stage":
 		{
 			if v, ok := d.GetOk("bitrate"); ok {
 				bitrate = v.(int)
@@ -237,14 +237,14 @@ func resourceChannelRead(ctx context.Context, d *schema.ResourceData, m interfac
 	d.Set("position", channel.Position)
 
 	switch channelType {
-	case "text":
+	case "text", "forum":
 		{
 			d.Set("topic", channel.Topic)
 			d.Set("nsfw", channel.NSFW)
 		}
 	case "news":
 		d.Set("topic", channel.Topic)
-	case "voice":
+	case "voice", "stage":
 		{
 			d.Set("bitrate", channel.Bitrate)
 			d.Set("user_limit", channel.UserLimit)
@@ -298,12 +298,12 @@ func resourceChannelUpdate(ctx context.Context, d *schema.ResourceData, m interf
 	position = map[bool]int{true: int(d.Get("position").(int)), false: int(channel.Position)}[d.HasChange("position")]
 
 	switch channelType {
-	case "text", "news":
+	case "text", "news", "forum":
 		{
 			topic = map[bool]string{true: d.Get("topic").(string), false: channel.Topic}[d.HasChange("topic")]
 			nsfw = map[bool]bool{true: d.Get("nsfw").(bool), false: channel.NSFW}[d.HasChange("nsfw")]
 		}
-	case "voice":
+	case "voice", "stage":
 		{
 			bitRate = map[bool]int{true: int(d.Get("bitrate").(int)), false: channel.Bitrate}[d.HasChange("bitrate")]
 			userLimit = map[bool]int{true: int(d.Get("user_limit").(int)), false: channel.UserLimit}[d.HasChange("user_limit")]

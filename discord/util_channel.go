@@ -8,16 +8,18 @@ import (
 
 func getTextChannelType(channelType discordgo.ChannelType) (string, bool) {
 	switch channelType {
-	case 0:
+	case discordgo.ChannelTypeGuildText:
 		return "text", true
-	case 2:
+	case discordgo.ChannelTypeGuildVoice:
 		return "voice", true
-	case 4:
+	case discordgo.ChannelTypeGuildCategory:
 		return "category", true
-	case 5:
+	case discordgo.ChannelTypeGuildNews:
 		return "news", true
-	case 6:
-		return "store", true
+	case discordgo.ChannelTypeGuildStageVoice:
+		return "stage", true
+	case discordgo.ChannelTypeGuildForum:
+		return "forum", true
 	}
 
 	return "text", false
@@ -33,8 +35,10 @@ func getDiscordChannelType(name string) (discordgo.ChannelType, bool) {
 		return discordgo.ChannelTypeGuildCategory, true
 	case "news":
 		return discordgo.ChannelTypeGuildNews, true
-	case "store":
-		return discordgo.ChannelTypeGuildStore, true
+	case "stage":
+		return discordgo.ChannelTypeGuildStageVoice, true
+	case "forum":
+		return discordgo.ChannelTypeGuildForum, true
 	}
 
 	return 0, false
