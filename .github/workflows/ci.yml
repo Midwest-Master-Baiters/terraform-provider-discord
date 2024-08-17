@@ -1,4 +1,6 @@
 name: CI
+run-name: "CI - ${{ github.sha }}"
+
 on:
   push:
     branches:
