@@ -1,4 +1,6 @@
-name: Release - ${{ github.event.inputs.new_version }}
+name: Release
+run-name: "Release - ${{ github.event.inputs.new_version }}"
+
 on:
   workflow_dispatch:
     inputs:
