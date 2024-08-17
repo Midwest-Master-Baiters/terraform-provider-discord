@@ -24,7 +24,7 @@ func resourceDiscordStageChannel() *schema.Resource {
 			"user_limit": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Default:     0,
+				Default:     10000,
 				Description: "User limit of the channel.",
 			},
 		}),
