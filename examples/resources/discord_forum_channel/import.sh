@@ -1,0 +1,1 @@
+terraform import discord_forum_channel.example "<channel id>"
