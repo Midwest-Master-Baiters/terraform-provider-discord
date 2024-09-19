@@ -22,6 +22,8 @@ func TestAccResourceDiscordServer(t *testing.T) {
 					resource.TestCheckResourceAttr(name, "explicit_content_filter", "0"),
 					resource.TestCheckResourceAttr(name, "afk_timeout", "300"),
 					resource.TestCheckResourceAttrSet(name, "owner_id"),
+					resource.TestCheckResourceAttr(name, "roles.#", "1"),
+					resource.TestCheckResourceAttrSet(name, "roles.0.id"),
 				),
 			},
 		},

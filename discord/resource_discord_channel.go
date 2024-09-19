@@ -295,7 +295,7 @@ func resourceChannelUpdate(ctx context.Context, d *schema.ResourceData, m interf
 	)
 
 	name = map[bool]string{true: d.Get("name").(string), false: channel.Name}[d.HasChange("name")]
-	position = map[bool]int{true: int(d.Get("position").(int)), false: int(channel.Position)}[d.HasChange("position")]
+	position = map[bool]int{true: d.Get("position").(int), false: channel.Position}[d.HasChange("position")]
 
 	switch channelType {
 	case "text", "news", "forum":
@@ -305,8 +305,8 @@ func resourceChannelUpdate(ctx context.Context, d *schema.ResourceData, m interf
 		}
 	case "voice", "stage":
 		{
-			bitRate = map[bool]int{true: int(d.Get("bitrate").(int)), false: channel.Bitrate}[d.HasChange("bitrate")]
-			userLimit = map[bool]int{true: int(d.Get("user_limit").(int)), false: channel.UserLimit}[d.HasChange("user_limit")]
+			bitRate = map[bool]int{true: d.Get("bitrate").(int), false: channel.Bitrate}[d.HasChange("bitrate")]
+			userLimit = map[bool]int{true: d.Get("user_limit").(int), false: channel.UserLimit}[d.HasChange("user_limit")]
 		}
 	}
 

@@ -75,6 +75,55 @@ func dataSourceDiscordServer() *schema.Resource {
 				Computed:    true,
 				Description: "The ID of the owner.",
 			},
+			"roles": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "List of roles in the server.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The name of the role.",
+						},
+						"permissions": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "The permission bits of the role.",
+						},
+						"color": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Integer representation of the role color with decimal color code.",
+						},
+						"hoist": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "If the role is hoisted.",
+						},
+						"mentionable": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "If the role is mentionable.",
+						},
+						"position": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Position of the role. This is reverse indexed, with `@everyone` being `0`.",
+						},
+						"managed": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "If role is managed by another service.",
+						},
+						"id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The ID of the role.",
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -129,6 +178,21 @@ func dataSourceDiscordServerRead(ctx context.Context, d *schema.ResourceData, m 
 	if server.OwnerID != "" {
 		d.Set("owner_id", server.OwnerID)
 	}
+
+	var roleMap []map[string]interface{}
+	for _, role := range server.Roles {
+		roleMap = append(roleMap, map[string]interface{}{
+			"name":        role.Name,
+			"permissions": role.Permissions,
+			"color":       role.Color,
+			"hoist":       role.Hoist,
+			"mentionable": role.Mentionable,
+			"position":    role.Position,
+			"managed":     role.Managed,
+			"id":          role.ID,
+		})
+	}
+	d.Set("roles", roleMap)
 
 	return diags
 }

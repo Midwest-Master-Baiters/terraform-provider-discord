@@ -2,6 +2,7 @@ package discord
 
 import (
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -66,20 +67,11 @@ func baseServerSchema() map[string]*schema.Schema {
 			Description: "ID of the channel AFK users will be moved to.",
 		},
 		"afk_timeout": {
-			Type:        schema.TypeInt,
-			Optional:    true,
-			Default:     300,
-			Description: "How many seconds before moving an AFK user.",
-			ValidateFunc: func(val interface{}, key string) (warns []string, errors []error) {
-				v := val.(int)
-				// See: https://discord.com/developers/docs/resources/guild#guild-object-guild-structure
-				expected := []int{60, 300, 900, 1800, 3600}
-				if !contains(expected, v) {
-					errors = append(errors, fmt.Errorf("afk_timeout must be set to one of the following values: %d, but got: %d", expected, v))
-				}
-
-				return
-			},
+			Type:         schema.TypeInt,
+			Optional:     true,
+			Default:      300,
+			Description:  "How many seconds before moving an AFK user.",
+			ValidateFunc: validation.IntInSlice([]int{60, 300, 900, 1800, 3600}),
 		},
 		"icon_url": {
 			Type:        schema.TypeString,
@@ -121,6 +113,55 @@ func baseServerSchema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Computed:    true,
 			Description: "The ID of the server.",
+		},
+		"roles": {
+			Type:        schema.TypeList,
+			Computed:    true,
+			Description: "List of roles in the server.",
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"name": {
+						Type:        schema.TypeString,
+						Computed:    true,
+						Description: "The name of the role.",
+					},
+					"permissions": {
+						Type:        schema.TypeInt,
+						Computed:    true,
+						Description: "The permission bits of the role.",
+					},
+					"color": {
+						Type:        schema.TypeInt,
+						Computed:    true,
+						Description: "Integer representation of the role color with decimal color code.",
+					},
+					"hoist": {
+						Type:        schema.TypeBool,
+						Computed:    true,
+						Description: "If the role is hoisted.",
+					},
+					"mentionable": {
+						Type:        schema.TypeBool,
+						Computed:    true,
+						Description: "If the role is mentionable.",
+					},
+					"position": {
+						Type:        schema.TypeInt,
+						Computed:    true,
+						Description: "Position of the role. This is reverse indexed, with `@everyone` being `0`.",
+					},
+					"managed": {
+						Type:        schema.TypeBool,
+						Computed:    true,
+						Description: "If role is managed by another service.",
+					},
+					"id": {
+						Type:        schema.TypeString,
+						Computed:    true,
+						Description: "The ID of the role.",
+					},
+				},
+			},
 		},
 	}
 }
@@ -270,6 +311,21 @@ func resourceServerCreate(ctx context.Context, d *schema.ResourceData, m interfa
 	d.Set("icon_hash", server.Icon)
 	d.Set("splash_hash", server.Splash)
 
+	var roleMap []map[string]interface{}
+	for _, role := range server.Roles {
+		roleMap = append(roleMap, map[string]interface{}{
+			"name":        role.Name,
+			"permissions": role.Permissions,
+			"color":       role.Color,
+			"hoist":       role.Hoist,
+			"mentionable": role.Mentionable,
+			"position":    role.Position,
+			"managed":     role.Managed,
+			"id":          role.ID,
+		})
+	}
+	d.Set("roles", roleMap)
+
 	return diags
 }
 
@@ -316,7 +372,20 @@ func resourceServerRead(ctx context.Context, d *schema.ResourceData, m interface
 	if d.Get("owner_id").(string) != "" && server.OwnerID != "" {
 		d.Set("owner_id", server.OwnerID)
 	}
-
+	roleMap := make([]map[string]interface{}, len(server.Roles))
+	for _, role := range server.Roles {
+		roleMap = append(roleMap, map[string]interface{}{
+			"name":        role.Name,
+			"permissions": role.Permissions,
+			"color":       role.Color,
+			"hoist":       role.Hoist,
+			"mentionable": role.Mentionable,
+			"position":    role.Position,
+			"managed":     role.Managed,
+			"id":          role.ID,
+		})
+	}
+	d.Set("roles", roleMap)
 	return diags
 }
 

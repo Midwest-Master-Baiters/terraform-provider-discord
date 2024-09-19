@@ -1,11 +1,12 @@
 package discord
 
 import (
+	"context"
 	"github.com/bwmarrin/discordgo"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"golang.org/x/net/context"
 )
 
 func resourceDiscordRole() *schema.Resource {
@@ -150,6 +151,11 @@ func resourceRoleRead(ctx context.Context, d *schema.ResourceData, m interface{}
 	if err != nil {
 		return diag.Errorf("Failed to fetch role %s: %s", d.Id(), err.Error())
 	}
+	if role == nil {
+		d.SetId("")
+		tflog.Warn(ctx, "Role not found. Removing from state", map[string]interface{}{"role_id": d.Id(), "server_id": d.Get("server_id")})
+		return diags
+	}
 
 	d.Set("name", role.Name)
 	d.Set("position", role.Position)
@@ -177,6 +183,11 @@ func resourceRoleUpdate(ctx context.Context, d *schema.ResourceData, m interface
 	role, err := getRole(ctx, client, serverId, roleId)
 	if err != nil {
 		return diag.Errorf("Failed to fetch role %s: %s", d.Id(), err.Error())
+	}
+	if role == nil {
+		d.SetId("")
+		tflog.Warn(ctx, "Role not found. Removing from state", map[string]interface{}{"role_id": d.Id(), "server_id": d.Get("server_id")})
+		return diags
 	}
 
 	if d.HasChange("position") {

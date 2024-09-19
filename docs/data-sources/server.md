@@ -40,5 +40,20 @@ output "discord_api_region" {
 - `id` (String) The ID of the server.
 - `owner_id` (String) The ID of the owner.
 - `region` (String) The region of the server.
+- `roles` (List of Object) List of roles in the server. (see [below for nested schema](#nestedatt--roles))
 - `splash_hash` (String) The hash of the server splash.
 - `verification_level` (Number) The required verification level of the server.
+
+<a id="nestedatt--roles"></a>
+### Nested Schema for `roles`
+
+Read-Only:
+
+- `color` (Number)
+- `hoist` (Boolean)
+- `id` (String)
+- `managed` (Boolean)
+- `mentionable` (Boolean)
+- `name` (String)
+- `permissions` (Number)
+- `position` (Number)
