@@ -18,10 +18,17 @@ func TestGetTextChannelType(t *testing.T) {
 		{id: 4, chType: "category", isHit: true},
 		{id: 5, chType: "news", isHit: true},
 		{id: 6, chType: "store", isHit: true},
+		{id: 13, chType: "stage", isHit: true},
+		{id: 15, chType: "forum", isHit: true},
 		// failure values
 		{id: 10, chType: "text", isHit: false},
 		{id: 100, chType: "text", isHit: false},
 	}
+
+	//	case discordgo.ChannelTypeGuildStageVoice:
+	//	return "stage", true
+	//	case discordgo.ChannelTypeGuildForum:
+	//	return "forum", true
 
 	for _, p := range params {
 		chType := discordgo.ChannelType(p.id)

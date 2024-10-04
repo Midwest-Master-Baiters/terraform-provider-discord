@@ -33,8 +33,6 @@ jobs:
         with:
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
-      - name: Git as GitHub Actions Bot
-        uses: Lucky3028/git-as-gha@v1.0.1
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v6
         with:
