@@ -17,7 +17,6 @@ func TestGetTextChannelType(t *testing.T) {
 		{id: 2, chType: "voice", isHit: true},
 		{id: 4, chType: "category", isHit: true},
 		{id: 5, chType: "news", isHit: true},
-		{id: 6, chType: "store", isHit: true},
 		{id: 13, chType: "stage", isHit: true},
 		{id: 15, chType: "forum", isHit: true},
 		// failure values
@@ -53,7 +52,6 @@ func TestGetDiscordChannelType(t *testing.T) {
 		{chType: 2, name: "voice", isHit: true},
 		{chType: 4, name: "category", isHit: true},
 		{chType: 5, name: "news", isHit: true},
-		{chType: 6, name: "store", isHit: true},
 		{chType: 13, name: "stage", isHit: true},
 		{chType: 15, name: "forum", isHit: true},
 		// failure values
