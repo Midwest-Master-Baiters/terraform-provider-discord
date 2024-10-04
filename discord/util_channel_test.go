@@ -54,6 +54,8 @@ func TestGetDiscordChannelType(t *testing.T) {
 		{chType: 4, name: "category", isHit: true},
 		{chType: 5, name: "news", isHit: true},
 		{chType: 6, name: "store", isHit: true},
+		{chType: 13, name: "stage", isHit: true},
+		{chType: 15, name: "forum", isHit: true},
 		// failure values
 		{chType: 0, name: "lorem", isHit: false},
 		{chType: 0, name: "pesudo", isHit: false},
