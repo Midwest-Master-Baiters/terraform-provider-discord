@@ -3,12 +3,12 @@
 page_title: "discord_stage_channel Resource - discord"
 subcategory: ""
 description: |-
-  A resource to create a stage channel.
+  A resource to create a voice channel.
 ---
 
 # discord_stage_channel (Resource)
 
-A resource to create a stage channel.
+A resource to create a voice channel.
 
 ## Example Usage
 
