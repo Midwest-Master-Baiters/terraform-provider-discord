@@ -1,4 +1,4 @@
-module github.com/lucky3028/discord-terraform
+module discord-terraform
 
 go 1.21
 
